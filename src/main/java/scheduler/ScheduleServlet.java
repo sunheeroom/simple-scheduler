@@ -1,6 +1,13 @@
 package scheduler;
 
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.JsonDeserializationContext;
+import com.google.gson.JsonDeserializer;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonPrimitive;
+import com.google.gson.JsonSerializationContext;
+import com.google.gson.JsonSerializer;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
@@ -8,6 +15,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.io.BufferedReader;
 import java.io.IOException;
+import java.lang.reflect.Type;
 import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.Map;
@@ -18,7 +26,18 @@ import scheduler.entity.Schedule;
 public class ScheduleServlet extends HttpServlet {
     private static Map<Integer, Schedule> scheduleMap = new HashMap<>();
     private static final AtomicInteger idCounter = new AtomicInteger(1);
-    private static final Gson gson = new Gson();
+    private static final Gson gson = new GsonBuilder()
+        .registerTypeAdapter(LocalDate.class, new JsonDeserializer<LocalDate>() {
+            public LocalDate deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) {
+                return LocalDate.parse(json.getAsString());
+            }
+        })
+        .registerTypeAdapter(LocalDate.class, new JsonSerializer<LocalDate>() {
+            public JsonElement serialize(LocalDate src, Type typeOfSrc, JsonSerializationContext context) {
+                return new JsonPrimitive(src.toString());  // "2025-05-13"
+            }
+        })
+        .create();
     
     // 일정 조회
     @Override
