@@ -3,7 +3,7 @@ plugins {
     id 'war'
 }
 
-group = 'hello'
+group = 'simple-scheduler'
 version = '1.0-SNAPSHOT'
 
 repositories {
