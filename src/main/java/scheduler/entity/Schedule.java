@@ -7,12 +7,12 @@ import lombok.Setter;
 @Getter
 @Setter
 public class Schedule {
-    public int id;
-    public String title;
-    public String user;
-    public String password;
-    public LocalDate created;
-    public LocalDate updated;
+    private int id;
+    private String title;
+    private String user;
+    private String password;
+    private LocalDate created;
+    private LocalDate updated;
     
     public Schedule(int id, String title, String user, String password) {
         this.id = id;
