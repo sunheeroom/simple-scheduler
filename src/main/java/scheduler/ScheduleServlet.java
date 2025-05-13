@@ -22,7 +22,7 @@ import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
 import scheduler.entity.Schedule;
 
-@WebServlet("/schedule")
+@WebServlet(name = "ScheduleServlet", urlPatterns = {"/schedules/*"})
 public class ScheduleServlet extends HttpServlet {
     private static Map<Integer, Schedule> scheduleMap = new HashMap<>();
     private static final AtomicInteger idCounter = new AtomicInteger(1);
@@ -118,7 +118,7 @@ public class ScheduleServlet extends HttpServlet {
     // 일정 삭제
     @Override
     protected void doDelete(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        int id = Integer.parseInt(req.getPathInfo());
+        int id = Integer.parseInt(req.getPathInfo().substring(1));
         if (!scheduleMap.containsKey(id)) {
             resp.setStatus(HttpServletResponse.SC_NOT_FOUND);
             resp.getWriter().write("{\"error\": \"Schedule Not Found\"}");
