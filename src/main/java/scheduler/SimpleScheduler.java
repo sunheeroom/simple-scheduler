@@ -40,6 +40,7 @@ public class SimpleScheduler {
     }
     
     private static int findSchedule() {
+        //        System.out.print("조회할 일정 ID: ");
         int id = Integer.parseInt(sc.nextLine());
         
         if (!scheduleMap.containsKey(id)) {
@@ -51,9 +52,12 @@ public class SimpleScheduler {
     
     private static void delete() {
         System.out.print("삭제할 일정 ID: ");
-        
         int id = findSchedule();
         if (id == -1) {
+            return;
+        }
+        if (!checkPassword(id)) {
+            System.out.println("비밀번호가 일치하지 않습니다.");
             return;
         }
         
@@ -61,30 +65,35 @@ public class SimpleScheduler {
         System.out.println("일정이 삭제되었습니다");
     }
     
+    private static boolean checkPassword(int id) {
+        System.out.print("비밀번호: ");
+        String password = sc.nextLine();
+        
+        Schedule schedule = scheduleMap.get(id);
+        return schedule.password.equals(password);
+    }
+    
     /**
      * 입력받은 ID의 일정을 수정한다.
      */
     private static void update() {
         System.out.print("수정할 일정 ID: ");
-        
         int id = findSchedule();
         if (id == -1) {
             return;
         }
         
-        Schedule schedule = scheduleMap.get(id);
-        System.out.print("비밀번호: ");
-        String password = sc.nextLine();
-        
-        if (!schedule.password.equals(password)) {
+        if (!checkPassword(id)) {
             System.out.println("비밀번호가 일치하지 않습니다.");
             return;
         }
+        
+        Schedule schedule = scheduleMap.get(id);
         System.out.print("새 제목: ");
         schedule.title = sc.nextLine();
         
         System.out.print("새 작성자: ");
-        schedule.user = sc.next();
+        schedule.user = sc.nextLine();
         
         schedule.updated = LocalDate.now();
         System.out.println("일정이 수정되었습니다.");
